@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">NguyenThiBaoNgan_K224111493_M02</string>
+    <string name="title_login">"Login "</string>
+    <string name="title_login_user_name">User name</string>
+    <string name="title_login_user_name_hint">Enter your username\n</string>
+    <string name="title_login_password">Password</string>
+    <string name="title_login_password_hint">Enter your password</string>
+    <string name="title_save_login_infor">Save login infor</string>
+    <string name="title_login_button_login">Login</string>
+    <string name="title_confirm_exit_title">Confirm exit</string>
+    <string name="title_confirm_exit_message">Are you sure want to exit?</string>
+    <string name="title_confirm_exit_ok">OK</string>
+    <string name="title_confirm_exit_cancel">Cancel</string>
+    <string name="title_create_new_product">ADD</string>
+    <string name="title_about">ABOUT</string>
+    <string name="title_add_product">Add New Product</string>
+    <string name="title_product_code">Product Code</string>
+    <string name="title_product_name">Product Name</string>
+    <string name="title_unit_price">Unit Price</string>
+    <string name="title_save_product">Save Product</string>
+    <string name="title_about_me">Student Information</string>
+    <string name="title_about_me_name">Name: Nguyen Thi Bao Ngan</string>
+    <string name="title_about_me_id">Student ID: K224111493</string>
+    <string name="title_about_me_class">Class: M02</string>
+    <string name="title_about_me_email">Email:nganntb22411ca@st.uel.edu.vn</string>
+</resources>
