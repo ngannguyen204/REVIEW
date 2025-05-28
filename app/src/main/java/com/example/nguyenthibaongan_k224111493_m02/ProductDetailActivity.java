@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,14 +54,23 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void saveProduct() {
         String code = edtProductCode.getText().toString();
         String name = edtProductName.getText().toString();
-        double price = Double.parseDouble(edtUnitPrice.getText().toString());
+        String priceStr = edtUnitPrice.getText().toString();
 
-        // Create new product (ID will be generated in ListProduct)
-        Product product = new Product(0, code, name, price, R.mipmap.ic_launcher);
+        if (code.isEmpty() || name.isEmpty() || priceStr.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("new_product", product);
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        try {
+            double price = Double.parseDouble(priceStr);
+            Product product = new Product(0, code, name, price, R.mipmap.ic_launcher);
+
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("new_product", product);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Please enter a valid price", Toast.LENGTH_SHORT).show();
+        }
     }
 }
