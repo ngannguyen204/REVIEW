@@ -1,77 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ProductDetailActivity">
 
-    <LinearLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        tools:context=".ProductDetailActivity">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/alata"
-            android:gravity="center"
-            android:text="@string/title_add_product"
-            android:textSize="34sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="60dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/alata"
-            android:text="@string/title_product_code"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alata"
+                android:text="@string/header_product_detail"
+                android:textAlignment="center"
+                android:textSize="34sp" />
 
-        <EditText
-            android:id="@+id/edtProductCode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"/>
+            <ImageView
+                android:id="@+id/imgProduct"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/alata"
-            android:text="@string/title_product_name"
-            android:textSize="20sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alata"
+                android:text="@string/title_product_id"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edtProductName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"/>
+            <EditText
+                android:id="@+id/edtProductId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/alata"
-            android:text="@string/title_unit_price"
-            android:textSize="20sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alata"
+                android:text="@string/title_product_name"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edtUnitPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"/>
+            <EditText
+                android:id="@+id/edtProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/alata"
-            android:text="@string/title_save_product"
-            android:textSize="20sp" />
-    </LinearLayout>
-</ScrollView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alata"
+                android:text="@string/title_product_price"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/edtPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alata"
+                android:text="@string/title_category_name"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtCategoryName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:backgroundTint="@color/button_teal"
+                    android:text="@string/title_button_save" />
+
+                <Button
+                    android:id="@+id/btnRemove"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    app:backgroundTint="@color/button_teal"
+                    android:text="@string/title_button_remove" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>

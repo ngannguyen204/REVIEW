@@ -23,4 +23,12 @@
     <string name="title_about_me_id">Student ID: K224111493</string>
     <string name="title_about_me_class">Class: M02</string>
     <string name="title_about_me_email">Email:nganntb22411ca@st.uel.edu.vn</string>
+    <string name="header_product_detail">Product Detail</string>
+    <string name="title_product_id">Product ID</string>
+    <string name="product_image">Product Image</string>
+    <string name="title_product_price">Product Price</string>
+    <string name="title_category_name">Category Name</string>
+    <string name="title_button_save">Save</string>
+    <string name="title_button_remove">Remove</string>
+
 </resources>

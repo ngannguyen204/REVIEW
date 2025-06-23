@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -17,6 +18,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import connectors.AccountConnector;
+import models.Account;
 import models.ListAccount;
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,6 +39,10 @@ public class LoginActivity extends AppCompatActivity {
     private static final int MAX_BACK_PRESS_COUNT = 3;
     private long lastBackPressTime = 0;
 
+    String DATABASE_NAME="Review.sql";
+    private static final String DB_PATH_SUFFIX = "/databases/";
+    SQLiteDatabase database=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Khởi tạo danh sách tài khoản và tạo dữ liệu mẫu
         listAccount = new ListAccount();
-        listAccount.generate_sample_dataset();
+        //listAccount.generate_sample_dataset();
 
         addViews();
         restoreLoginInformation();
@@ -48,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        processCopy();
     }
 
     private void addViews() {
@@ -103,30 +117,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void do_login(View view) {
-        String username = etUsername.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+        AccountConnector accconnector=new AccountConnector();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String usr = etUsername.getText().toString();
+        String pwd = etPassword.getText().toString();
 
-        // Kiểm tra với danh sách tài khoản
-        boolean loginSuccess = false;
-        for (models.Account account : listAccount.getAccounts()) {
-            if (account.getUsername().equals(username) && account.getPassword().equals(password)) {
-                loginSuccess = true;
-                break;
-            }
-        }
-
-        if (loginSuccess) {
-            saveLoginInformation();
-            Intent intent = new Intent(this, ProductListActivity.class);
+        Account a_login = accconnector.login(this,usr, pwd);
+        if (a_login != null) {
+            Intent intent = new Intent(this,CategoryManagementActivity.class);
             startActivity(intent);
-            finish();
         } else {
-            Toast.makeText(this, "Login failed! Invalid username or password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Login failed! Check your account again!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -199,5 +200,64 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         restoreLoginInformation();
+    }
+
+
+    private void processCopy() {
+        //private app
+        File dbFile = getDatabasePath(DATABASE_NAME);
+
+        if (!dbFile.exists())
+        {
+            try
+            {
+                CopyDataBaseFromAsset();
+                Toast.makeText(this, "Copying sucess from Assets folder", Toast.LENGTH_LONG).show();
+            }
+            catch (Exception e)
+            {
+                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private String getDatabasePath() {
+        return getApplicationInfo().dataDir + DB_PATH_SUFFIX+ DATABASE_NAME;
+    }
+
+    public void CopyDataBaseFromAsset()
+    {
+        try {
+            InputStream myInput;
+
+            myInput = getAssets().open(DATABASE_NAME);
+
+
+            // Path to the just created empty db
+            String outFileName = getDatabasePath();
+
+            // if the path doesn't exist first, create it
+            File f = new File(getApplicationInfo().dataDir + DB_PATH_SUFFIX);
+            if (!f.exists())
+                f.mkdir();
+
+            // Open the empty db as the output stream
+            OutputStream myOutput = new FileOutputStream(outFileName);
+
+            // transfer bytes from the inputfile to the outputfile
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = myInput.read(buffer)) > 0) {
+                myOutput.write(buffer, 0, length);
+            }
+
+            // Close the streams
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

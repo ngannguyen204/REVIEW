@@ -7,17 +7,20 @@ public class Product implements Serializable {
     private String productCode;
     private String productName;
     private double unitPrice;
-    private int imageLink;
+    private String imageLink;
+    private int cateid;
+
 
     public Product() {
     }
 
-    public Product(int id, String productCode, String productName, double unitPrice, int imageLink) {
+    public Product(int id, String productCode, String productName, double unitPrice, String imageLink, int cateid) {
         this.id = id;
         this.productCode = productCode;
         this.productName = productName;
         this.unitPrice = unitPrice;
         this.imageLink = imageLink;
+        this.cateid = cateid;
     }
 
     public int getId() {
@@ -52,11 +55,19 @@ public class Product implements Serializable {
         this.unitPrice = unitPrice;
     }
 
-    public int getImageLink() {
+    public String getImageLink() {
         return imageLink;
     }
 
-    public void setImageLink(int imageLink) {
+    public void setImageLink(String imageLink) {
         this.imageLink = imageLink;
+    }
+
+    public int getCateid() {
+        return cateid;
+    }
+
+    public void setCateid(int cateid) {
+        this.cateid = cateid;
     }
 }

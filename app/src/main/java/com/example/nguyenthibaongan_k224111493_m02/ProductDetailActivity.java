@@ -1,76 +1,146 @@
 package com.example.nguyenthibaongan_k224111493_m02;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import connectors.CategoryConnector;
+import connectors.ProductConnector;
 import models.Product;
 
 public class ProductDetailActivity extends AppCompatActivity {
-    private EditText edtProductCode, edtProductName, edtUnitPrice;
-    private Button btnSave;
+    private EditText edtProductId, edtProductName, edtPrice, edtCategoryName;
+    private ImageView imgProduct;
+    private Button btnSave, btnRemove;
+    private ProductConnector productConnector;
+    private CategoryConnector categoryConnector;
+    private Product currentProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_product_detail);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        initializeViews();
-        setupListeners();
-    }
-
-    private void initializeViews() {
-        edtProductCode = findViewById(R.id.edtProductCode);
+        // Initialize views
+        edtProductId = findViewById(R.id.edtProductId);
         edtProductName = findViewById(R.id.edtProductName);
-        edtUnitPrice = findViewById(R.id.edtUnitPrice);
+        edtPrice = findViewById(R.id.edtPrice);
+        edtCategoryName = findViewById(R.id.edtCategoryName);
+        imgProduct = findViewById(R.id.imgProduct);
         btnSave = findViewById(R.id.btnSave);
+        btnRemove = findViewById(R.id.btnRemove);
+
+        // Initialize connectors
+        productConnector = new ProductConnector(this);
+        categoryConnector = new CategoryConnector(this);
+
+        // Get product ID from intent
+        int productId = getIntent().getIntExtra("PRODUCT_ID", -1);
+
+        if (productId != -1) {
+            // Load product details
+            currentProduct = productConnector.getProductById(productId);
+            if (currentProduct != null) {
+                displayProductDetails(currentProduct);
+            } else {
+                Toast.makeText(this, "Product not found", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } else {
+            Toast.makeText(this, "Invalid product ID", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        // Set up button listeners
+        btnSave.setOnClickListener(v -> saveProduct());
+        btnRemove.setOnClickListener(v -> removeProduct());
     }
 
-    private void setupListeners() {
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveProduct();
+    private void displayProductDetails(Product product) {
+        edtProductId.setText(String.valueOf(product.getId()));
+        edtProductName.setText(product.getProductName());
+        edtPrice.setText(String.valueOf(product.getUnitPrice()));
+
+        // Get category name
+        String categoryName = categoryConnector.getCategoryNameById(product.getCateid());
+        edtCategoryName.setText(categoryName);
+
+        // Load product image
+        if (product.getImageLink() != null && !product.getImageLink().isEmpty()) {
+            new LoadImageTask(imgProduct).execute(product.getImageLink());
+        } else {
+            imgProduct.setImageResource(R.mipmap.ic_launcher);
+        }
+    }
+
+    // Thêm lớp AsyncTask vào trong ProductDetailActivity
+    private static class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
+        private final ImageView imageView;
+
+        public LoadImageTask(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            String urlString = urls[0];
+            Bitmap bitmap = null;
+
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(input);
+                input.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            }
+        }
     }
 
     private void saveProduct() {
-        String code = edtProductCode.getText().toString();
-        String name = edtProductName.getText().toString();
-        String priceStr = edtUnitPrice.getText().toString();
+        // Implement save functionality here
+        Toast.makeText(this, "Save functionality to be implemented", Toast.LENGTH_SHORT).show();
+    }
 
-        if (code.isEmpty() || name.isEmpty() || priceStr.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-            return;
+    private void removeProduct() {
+        // Implement remove functionality here
+        Toast.makeText(this, "Remove functionality to be implemented", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (productConnector != null) {
+            productConnector.close();
         }
-
-        try {
-            double price = Double.parseDouble(priceStr);
-            Product product = new Product(0, code, name, price, R.mipmap.ic_launcher);
-
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("new_product", product);
-            setResult(Activity.RESULT_OK, resultIntent);
-            finish();
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Please enter a valid price", Toast.LENGTH_SHORT).show();
+        if (categoryConnector != null) {
+            categoryConnector.close();
         }
     }
 }
